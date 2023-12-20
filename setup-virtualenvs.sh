@@ -105,4 +105,44 @@ EOF
 # Make delete_venv.sh executable
 chmod +x delete_venv.sh
 
+# Create list-venvs.sh script for listing virtual environments
+cat << 'EOF' > list-venvs.sh
+#!/bin/bash
+
+# Prompt user for the root virtual directory path
+read -p "Where are your virtual environments located? Enter an absolute path, by default the script will look into /virtualenvs. Press enter to use the default: " root_path
+
+# Set default path if user input is empty
+if [ -z "$root_path" ]; then
+    root_path="/virtualenvs"
+fi
+
+# Change to the specified or default root directory
+cd "$root_path" || exit
+
+# Check if 'virtualenvs' directory exists
+if [ ! -d "virtualenvs" ]; then
+    echo "No 'virtualenvs' directory found at '$root_path'."
+    exit 1
+fi
+
+# Change directory to 'virtualenvs'
+cd virtualenvs || exit
+
+# List all environments in a numerical format
+echo "Listing all virtual environments:"
+count=1
+for d in */; do
+    echo "$count. ${d%/}"
+    ((count++))
+done
+
+if [ "$count" -eq 1 ]; then
+    echo "No virtual environments found in '$root_path/virtualenvs'."
+fi
+EOF
+
+# Make list-venvs.sh executable
+chmod +x list-venvs.sh
+
 echo "Scripts created successfully in the '$root_path/virtualenvs' directory."
