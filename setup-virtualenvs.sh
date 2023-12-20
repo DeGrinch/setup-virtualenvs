@@ -8,17 +8,14 @@ if [ -z "$root_path" ]; then
     root_path="/virtualenvs"
 fi
 
-# Change to the specified or default root directory
-cd "$root_path" || exit
-
-# Create 'virtualenvs' directory if it doesn't exist
-if [ ! -d "virtualenvs" ]; then
-    mkdir virtualenvs
-    echo "Created 'virtualenvs' directory at '$root_path'."
+# Check if the root directory exists, if not, create it
+if [ ! -d "$root_path" ]; then
+    mkdir -p "$root_path"
+    echo "Created directory '$root_path'."
 fi
 
-# Change directory to 'virtualenvs'
-cd virtualenvs || exit
+# Change to the specified or default root directory
+cd "$root_path" || exit
 
 # Create create_venv.sh script for creating virtual environments
 cat << 'EOF' > create_venv.sh
@@ -94,7 +91,7 @@ if [ -d "$venv_name" ]; then
     # Deactivate the virtual environment if currently activated
     deactivate &> /dev/null
 
-    # Delete the virtual environment
+# Delete the virtual environment
     rm -rf "$venv_name"
     echo "Virtual environment '$venv_name' deleted successfully."
 else
@@ -145,4 +142,4 @@ EOF
 # Make list-venvs.sh executable
 chmod +x list-venvs.sh
 
-echo "Scripts created successfully in the '$root_path/virtualenvs' directory."
+echo "Scripts created successfully in the '$root_path' directory."
